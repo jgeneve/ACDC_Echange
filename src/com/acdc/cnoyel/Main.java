@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,7 +25,7 @@ public class Main {
 		System.out.println("Bienvenue sur le programme du site web STACK de l'IMT Atlantique. \nVous souhaitez:");
 		displayOptionArray(optionArray);
 		
-        System.out.print("Choix n°:	");
+        System.out.print("Choix n°:");
         userInput = br.readLine();
 		
 		while (!done) {
@@ -42,23 +44,28 @@ public class Main {
 		Post newPost = new Post(); // CREATE THE NEW POST
 		
 		// ASK FOR POST TITLE
-		System.out.println("Entrer le titre du post: ");
+		System.out.println("Titre: ");
 		String title = br.readLine();
 		newPost.setTitle(title);
 		
 		// ASK FOR CATEGORY
-		System.out.println("Entrer la categorie du post: ");
+		System.out.println("Categorie: ");
 		String category = br.readLine();
 		newPost.setCategory(category);
 
+		// ASK FOR POST AUTHOR
+		System.out.println("Auteur: ");
+		String author = br.readLine();
+		newPost.setAuthor(author);
+		
 		// ASK FOR POST BODY TEXT
-		System.out.println("Entrer le texte du post: ");
+		System.out.println("Texte: ");
 		String bodyText = br.readLine();
 		newPost.setText(bodyText);
 		
 		// ASK FOR POST LINKS
 		String[] optionLinkArray = { "Oui", "Non, continuer", "Quitter" };
-		System.out.println("Voulez-vous ajouter un ou plusieurs liens au post: ");
+		System.out.println("Lien(s): ");
 		displayOptionArray(optionLinkArray);
 		userInput = br.readLine(); // Ask user
 
@@ -91,7 +98,7 @@ public class Main {
 		}
 
 		// ASK FOR POST IMAGES
-		System.out.println("Voulez-vous ajouter une ou plusieurs images au post: ");
+		System.out.println("Image(s): ");
 		displayOptionArray(optionLinkArray);
 		userInput = br.readLine(); // Ask user
 
@@ -134,11 +141,11 @@ public class Main {
 	
 	// Create a file and put a string inside of it
 	public static File createMarkdownFile(String markdownString) throws IOException {
-        BufferedWriter output = null;
-        new File("_post").mkdir();
+        new File("_post").mkdir(); // Create folder
         String filename = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + ".markdown";
+        
         File file = new File("_post" + File.separator + filename);
-        output = new BufferedWriter(new FileWriter(file));
+        BufferedWriter output = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
         output.write(markdownString);
 	    output.close();
         return file;

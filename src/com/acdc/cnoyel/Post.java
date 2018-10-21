@@ -12,6 +12,7 @@ public class Post {
 	private String title;
 	private String text;
 	private String category;
+	private String author;
 	private List<String> linkList;
 	private List<String> imgList;
 	
@@ -43,6 +44,14 @@ public class Post {
 		this.category = category;
 	}
 
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}	
+	
 	public List<String> getLinkList() {
 		return linkList;
 	}
@@ -74,11 +83,14 @@ public class Post {
 				+ "date: " + date + "\n"
 				+ "categories: " + this.category + "\n"
 				+ "---" + "\n\n");
+		// ''AUTHOR''
+		txt.append("*By " + this.author + "*" + "\n\n");
 		
 		// ''BODY''
 		txt.append(this.text);
 		
 		return txt.toString();
-	}	
+	}
+
 	
 }
