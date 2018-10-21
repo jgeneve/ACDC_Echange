@@ -12,6 +12,7 @@
 - [ ] Transform the markdown into HTML (using Jekyll)
 - [ ] Create local server and open the HTML page
 - [ ] The user can validate/edit/delete the post
+- [ ] Push generated post on GitHub
 
 ### LOG 2018-10-16
 - CMD interface created allowing user to enter information in order to generate the new post

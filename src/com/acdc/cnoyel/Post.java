@@ -1,5 +1,9 @@
 package com.acdc.cnoyel;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -55,14 +59,18 @@ public class Post {
 		this.imgList = imgList;
 	}
 	
-	public String generateMarkdown() {
+	
+	/**
+	 * @return a string in markdown format
+	 */
+	public String generateMarkdownString() {
 		StringBuffer txt = new StringBuffer("");
 		String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 		
 		// ''HEADER''
-		txt.append("---"
+		txt.append("---\n"
 				+ "layout: post" + "\n"
-				+ "title: " + this.title + "\n"
+				+ "title: \"" + this.title + "\"\n"
 				+ "date: " + date + "\n"
 				+ "categories: " + this.category + "\n"
 				+ "---" + "\n\n");
@@ -71,7 +79,6 @@ public class Post {
 		txt.append(this.text);
 		
 		return txt.toString();
-	}
-	
+	}	
 	
 }

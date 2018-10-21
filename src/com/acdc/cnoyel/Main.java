@@ -1,9 +1,14 @@
 package com.acdc.cnoyel;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Main {
@@ -117,9 +122,26 @@ public class Main {
 			}
 		}
 		
-		String markdown = newPost.generateMarkdown();
-		System.out.println(markdown);
+		// CREATE MARKDOWN FILE
+		String markdownString = newPost.generateMarkdownString();
+		System.out.println(markdownString);
+		File markdownFile = createMarkdownFile(markdownString);
+		
+		
+		
 
+	}
+	
+	// Create a file and put a string inside of it
+	public static File createMarkdownFile(String markdownString) throws IOException {
+        BufferedWriter output = null;
+        new File("_post").mkdir();
+        String filename = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + ".markdown";
+        File file = new File("_post" + File.separator + filename);
+        output = new BufferedWriter(new FileWriter(file));
+        output.write(markdownString);
+	    output.close();
+        return file;
 	}
 	
 	// Method taking a string array as input and displaying each elem with his index
