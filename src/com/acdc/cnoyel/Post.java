@@ -72,7 +72,7 @@ public class Post {
 	/**
 	 * @return a string in markdown format
 	 */
-	public String generateMarkdownString() {
+	public String toMarkdown() {
 		StringBuffer txt = new StringBuffer("");
 		String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 		
@@ -85,9 +85,21 @@ public class Post {
 				+ "---" + "\n\n");
 		// ''AUTHOR''
 		txt.append("*By " + this.author + "*" + "\n\n");
-		
+
 		// ''BODY''
 		txt.append(this.text);
+		
+		// ''IMAGES''
+		txt.append("\n#Images:");
+		for (int i=0; i<this.imgList.size(); i++) {
+			txt.append("\n![" + " Image " + i + "](" + this.imgList.get(i) + " \"Image" + i + "\")");
+		}
+		
+		// ''LINKS''
+		txt.append("\n#Links:");
+		for (int i=0; i<this.linkList.size(); i++) {
+			txt.append("\n[" + this.linkList.get(i) + "](" + this.linkList.get(i) + ")");
+		}
 		
 		return txt.toString();
 	}

@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -78,7 +79,7 @@ public class Main {
 				
 				String[] arrayLink = userInput.split(" ");
 				List<String> linkList = new ArrayList<String>();
-				for(int i=0; i<arrayLink.length-1; i++) {
+				for(int i=0; i<arrayLink.length; i++) {
 					linkList.add(arrayLink[i]);
 				}
 				newPost.setLinkList(linkList);
@@ -110,7 +111,7 @@ public class Main {
 
 				List<String> imgList = new ArrayList<String>();;
 				String[] arrayLink = userInput.split(" ");
-				for(int i=0; i<arrayLink.length-1; i++) {
+				for(int i=0; i<arrayLink.length; i++) {
 					imgList.add(arrayLink[i]);
 				}
 				newPost.setImgList(imgList);
@@ -130,21 +131,36 @@ public class Main {
 		}
 		
 		// CREATE MARKDOWN FILE
-		String markdownString = newPost.generateMarkdownString();
+		String markdownString = newPost.toMarkdown();
 		System.out.println(markdownString);
-		File markdownFile = createMarkdownFile(markdownString);
+        String filename = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + "-" + newPost.getTitle().replace(" ", "-") + ".markdown";
+		File markdownFile = createMarkdownFile(markdownString, filename);
 		
+		executeCommand("dir");
 		
 		
 
 	}
 	
+	public static void executeCommand(String myCmd) {
+	    try {
+            Process p = new ProcessBuilder("cmd.exe", "", myCmd)
+                  .redirectErrorStream(true).start();
+            InputStream is = p.getInputStream(); 
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            String in;
+            while ((in = br.readLine()) != null) {
+               System.out.println(in);
+            }
+         }catch(Exception e) {
+            e.printStackTrace();
+         }
+	}
+	
 	// Create a file and put a string inside of it
-	public static File createMarkdownFile(String markdownString) throws IOException {
+	public static File createMarkdownFile(String markdownString, String filename) throws IOException {
         new File("_post").mkdir(); // Create folder
-        String filename = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + ".markdown";
-        
-        File file = new File("_post" + File.separator + filename);
+        File file = new File("web-master" + File.separator + "BLOG" + File.separator + "_posts" + File.separator + filename);
         BufferedWriter output = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
         output.write(markdownString);
 	    output.close();
@@ -156,6 +172,10 @@ public class Main {
 		for (int i=0; i<myArray.length ;i++) {
 			System.out.println((i+1) + " - " + myArray[i]);
 		}
+	}
+	
+	public static void addCategory(String newCategory) {
+		
 	}
 	
 

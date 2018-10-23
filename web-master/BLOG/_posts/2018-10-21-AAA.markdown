@@ -1,0 +1,10 @@
+---
+layout: post
+title: "AAA"
+date: 2018-10-21
+categories: 2
+---
+
+*By 2*
+
+2
