@@ -14,6 +14,9 @@
 - [ ] The user can validate/edit/delete the post
 - [ ] Push generated post on GitHub
 
+### LOG 2018-10-31
+No time this week
+
 ### LOG 2018-10-23
 - Add an author to the news
 - Generate markdown file and fill it with information entered by the user
