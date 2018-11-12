@@ -1,182 +1,72 @@
 package com.acdc.cnoyel;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 
-		boolean done = false; // used to continue or stop a while loop
-		String userInput; // Used to store temporally the user input
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		// CONFIG REPERTOIRE LOCAL ET DISTANT
+		Git git = new Git();
+		git.setLocalRepo(System.getProperty("user.home") + File.separator + "eclipse-workspace" + File.separator 
+				+ "ACDC" + File.separator + "web-master" + File.separator + "BLOG" + File.separator);
+		git.setGithubRepo("https://github.com/CedricNoyel/BLOGACDC_website.git");
+		
+		// USER ACTIONS
+		System.out.println("Titre de la publication");
+		String title = Tools.getStringUserInput();
+		
+		System.out.println("Catégorie de la publication");
+		String category = Tools.getStringUserInput();
 
-		String[] optionArray = { "Créer une news", "Quitter le programme" };
-		System.out.println("Bienvenue sur le programme du site web STACK de l'IMT Atlantique. \nVous souhaitez:");
-		displayOptionArray(optionArray);
+		System.out.println("Auteur de la publication");
+		String author = Tools.getStringUserInput();
+
+		System.out.println("Texte de la publication");
+		String bodyText = Tools.getStringUserInput();
 		
-        System.out.print("Choix n°:");
-        userInput = br.readLine();
+		System.out.println("Liens de la publication (séparés par un espace si plusieurs ou laisser vide si aucun)");
+		List<String> linkList = Tools.stringToList(Tools.getStringUserInput(), " ");
 		
-		while (!done) {
-			if (userInput.equals("1")) {
-				done = true;
-			} else if (userInput.equals("2")) {
-		        System.out.print("Exit program ...");
-				System.exit(0); // END PROGRAM
-			} else {
-				System.out.println("Entrée non reconnue, merci de réessayer: ");
-				displayOptionArray(optionArray);
-				userInput = br.readLine(); // Ask user
-			}
-		}
+		System.out.println("Liens des images (séparés par un espace si plusieurs images ou laisser vide si aucune)");
+		List<String> imgLinkList = Tools.stringToList(Tools.getStringUserInput(), " ");
 		
+		// CREATE THE POST
 		Post newPost = new Post(); // CREATE THE NEW POST
-		
-		// ASK FOR POST TITLE
-		System.out.println("Titre: ");
-		String title = br.readLine();
 		newPost.setTitle(title);
-		
-		// ASK FOR CATEGORY
-		System.out.println("Categorie: ");
-		String category = br.readLine();
-		newPost.setCategory(category);
-
-		// ASK FOR POST AUTHOR
-		System.out.println("Auteur: ");
-		String author = br.readLine();
+		newPost.setCategory(category.trim().toLowerCase().replace(" ", "-"));
 		newPost.setAuthor(author);
-		
-		// ASK FOR POST BODY TEXT
-		System.out.println("Texte: ");
-		String bodyText = br.readLine();
 		newPost.setText(bodyText);
-		
-		// ASK FOR POST LINKS
-		String[] optionLinkArray = { "Oui", "Non, continuer", "Quitter" };
-		System.out.println("Lien(s): ");
-		displayOptionArray(optionLinkArray);
-		userInput = br.readLine(); // Ask user
+		newPost.setLinkList(linkList);
+		newPost.setImgList(imgLinkList);
 
-		done = false;
-		while (!done) {
-			if (userInput.equals("1")) {
-
-				System.out.println("Entrer le ou les lien(s) séparés par un espace: ");
-				userInput = br.readLine(); // Ask user
-				
-				String[] arrayLink = userInput.split(" ");
-				List<String> linkList = new ArrayList<String>();
-				for(int i=0; i<arrayLink.length; i++) {
-					linkList.add(arrayLink[i]);
-				}
-				newPost.setLinkList(linkList);
-				
-				done = true;
-			} else if (userInput.equals("2")) {
-				// NOTHING, Just continue
-				done = true;
-			} else if (userInput.equals("3")) {
-		        System.out.print("Exit program ...");
-				System.exit(0); // END PROGRAM
-			} else {
-				System.out.println("Entrée non reconnue, merci de réessayer: ");
-				displayOptionArray(optionArray);
-				userInput = br.readLine(); // Ask user
-			}
-		}
-
-		// ASK FOR POST IMAGES
-		System.out.println("Image(s): ");
-		displayOptionArray(optionLinkArray);
-		userInput = br.readLine(); // Ask user
-
-		done = false;
-		while (!done) {
-			if (userInput.equals("1")) {
-				System.out.println("Entrer le ou les lien(s) des images séparés par un espace: ");
-				userInput = br.readLine(); // Ask user
-
-				List<String> imgList = new ArrayList<String>();;
-				String[] arrayLink = userInput.split(" ");
-				for(int i=0; i<arrayLink.length; i++) {
-					imgList.add(arrayLink[i]);
-				}
-				newPost.setImgList(imgList);
-				
-				done = true;
-			} else if (userInput.equals("2")) {
-				// NOTHING, Just continue
-				done = true;
-			} else if (userInput.equals("3")) {
-		        System.out.print("Exit program ...");
-				System.exit(0); // END PROGRAM
-			} else {
-				System.out.println("Entrée non reconnue, merci de réessayer: ");
-				displayOptionArray(optionArray);
-				userInput = br.readLine(); // Ask user
-			}
-		}
-		
-		// CREATE MARKDOWN FILE
+		// CATEGORY
+		Categories.addCategory(category.trim().toLowerCase().replace(" ", "-")); // --> if not exist, add it into category/categories.txt file
 		String markdownString = newPost.toMarkdown();
+				
+		// CREATE MARKDOWN FILE
 		System.out.println(markdownString);
-        String filename = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + "-" + newPost.getTitle().replace(" ", "-") + ".markdown";
-		File markdownFile = createMarkdownFile(markdownString, filename);
-		
-		executeCommand("dir");
-		
-		
+		String markdownFileName = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + "-" + newPost.getTitle().replace(" ", "-") + ".markdown";
+		String markdownFilePath = git.getLocalRepo() + "_posts" + File.separator + markdownFileName;
+        Tools.createMarkdownFile(markdownString, markdownFilePath);
 
-	}
-	
-	public static void executeCommand(String myCmd) {
-	    try {
-            Process p = new ProcessBuilder("cmd.exe", "", myCmd)
-                  .redirectErrorStream(true).start();
-            InputStream is = p.getInputStream(); 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String in;
-            while ((in = br.readLine()) != null) {
-               System.out.println(in);
-            }
-         }catch(Exception e) {
-            e.printStackTrace();
-         }
-	}
-	
-	// Create a file and put a string inside of it
-	public static File createMarkdownFile(String markdownString, String filename) throws IOException {
-        new File("_post").mkdir(); // Create folder
-        File file = new File("web-master" + File.separator + "BLOG" + File.separator + "_posts" + File.separator + filename);
-        BufferedWriter output = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8);
-        output.write(markdownString);
-	    output.close();
-        return file;
-	}
-	
-	// Method taking a string array as input and displaying each elem with his index
-	public static void displayOptionArray(String[] myArray) {
-		for (int i=0; i<myArray.length ;i++) {
-			System.out.println((i+1) + " - " + myArray[i]);
-		}
-	}
-	
-	public static void addCategory(String newCategory) {
 		
+		// DISPLAY DEMO
+		Tools.executeCmd("bundle exec jekyll serve -o", git.getLocalRepo(), true);
+		System.out.println("Appuyez sur <entrer> pour valider et publier");
+		Tools.getStringUserInput();
+		
+		// GIT & GITHUB
+		Tools.executeCmd("git add .", git.getLocalRepo());
+		Tools.executeCmd("git commit -m \"add " + markdownFileName + "\" .", git.getLocalRepo());
+		Tools.executeCmd("git push", git.getLocalRepo());
+		
+		System.out.println("- End -");
 	}
 	
-
 }
