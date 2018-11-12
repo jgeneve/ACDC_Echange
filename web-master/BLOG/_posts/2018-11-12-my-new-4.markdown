@@ -1,0 +1,10 @@
+---
+layout: post
+title: "my new 4"
+date: 2018-11-12
+categories: aaa
+---
+
+*By aa*
+
+aaa<br /><br />Links:<br />[http://facebook.com](http://facebook.com)<br />[http://youtube.com](http://youtube.com)

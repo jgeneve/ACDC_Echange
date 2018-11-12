@@ -1,0 +1,10 @@
+---
+layout: post
+title: "my new test 3"
+date: 2018-11-12
+categories: aa-a
+---
+
+*By Cédric N*
+
+aaadzaz<br />#Images:<br />![ Image 0](https://tse3.mm.bing.net/th?id=OIP.EKnkd1dDcRVlINVxyTqU3QHaHX&pid=Api "Image0")<br />![ Image 1](https://tse2.mm.bing.net/th?id=OIP.wMb14N24J0HxkqW7zAZx4wHaD5&pid=Api "Image1")<br />#Links:<br />[http://google.com](http://google.com)<br />[http://facebook.com](http://facebook.com)<br />[http://poisson.com](http://poisson.com)<br />[http://html.com](http://html.com)
