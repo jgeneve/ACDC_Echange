@@ -87,8 +87,8 @@ public class Tools {
 			Process process = builder.start();
 			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);		
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
+			TimeUnit.SECONDS.sleep(3);
 			if (waitUserAction) {
-				TimeUnit.SECONDS.sleep(3);
 				System.out.println("Press <Enter> to end demo");
 				System.in.read();
 			} else {

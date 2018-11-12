@@ -13,8 +13,7 @@ public class Main {
 
 		// CONFIG REPERTOIRE LOCAL ET DISTANT
 		Git git = new Git();
-		git.setLocalRepo(System.getProperty("user.home") + File.separator + "eclipse-workspace" + File.separator 
-				+ "ACDC" + File.separator + "web-master" + File.separator + "BLOG" + File.separator);
+		git.setLocalRepo("C:\\Users\\cedri\\Desktop\\BLOGACDC_website\\");
 		git.setGithubRepo("https://github.com/CedricNoyel/BLOGACDC_website.git");
 		
 		// USER ACTIONS
