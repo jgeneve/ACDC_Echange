@@ -22,13 +22,12 @@ public class Tools {
 	 */
 	public static String getStringUserInput() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String userInput = null;
 		try {
-			userInput = br.readLine();
+			return br.readLine();
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return userInput;
 	}
 
 	/**
@@ -40,12 +39,15 @@ public class Tools {
 	 */
 	public static List<String> stringToList(String str, String separator) {
 		List<String> list = new ArrayList<>();
-		if (!str.isEmpty()) {
-			String[] arrayLink = str.split(separator);
-			list = new ArrayList<String>();
-			for(int i=0; i<arrayLink.length; i++) {
-				list.add(arrayLink[i]);
-			}
+		list = new ArrayList<String>();
+		
+		if (str.isEmpty()) {
+			return list;
+		}
+		
+		String[] arrayLink = str.split(separator);
+		for(int i=0; i<arrayLink.length; i++) {
+			list.add(arrayLink[i]);
 		}
 		return list;
 	}
@@ -57,7 +59,6 @@ public class Tools {
 	 * @throws IOException
 	 */
 	public static File createMarkdownFile(String markdownString, String filePath) {
-		// new File("_post").mkdir(); // If not exist, create folder 
 		File file = new File(filePath);
 		BufferedWriter output;
 		try {
@@ -80,27 +81,26 @@ public class Tools {
 		System.out.println("COMMAND RUN: " + cmd + "\r	in " + path);
 		ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(new File(path));
+		Process process = null;
 		if(System.getProperty("os.name").toLowerCase().startsWith("windows"))
 			builder.command("cmd.exe", "/c", cmd); // IF windows os
 		else builder.command("sh", "-c", cmd); // ELSE unix
 		try {
-			Process process = builder.start();
-			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);		
-			Executors.newSingleThreadExecutor().submit(streamGobbler);
+			process = builder.start();
 			TimeUnit.SECONDS.sleep(3);
 			if (waitUserAction) {
 				System.out.println("Press <Enter> to end demo");
 				System.in.read();
+				process.destroy();
 			} else {
-				int exitCode = process.waitFor();
-				assert exitCode == 0;
+				process.waitFor();
 			}
-			process.destroy();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		process.destroy();
 	}
 
 	/**
@@ -110,23 +110,6 @@ public class Tools {
 	 */
 	public static void executeCmd(String cmd, String path) {
 		executeCmd(cmd, path, false);
-	}
-
-	/** Class used to run command in terminal **/
-	private static class StreamGobbler implements Runnable {
-		private java.io.InputStream inputStream;
-		private java.util.function.Consumer<String> consumer;
-
-		public StreamGobbler(java.io.InputStream inputStream, java.util.function.Consumer<String> consumer) {
-			this.inputStream = inputStream;
-			this.consumer = consumer;
-		}
-
-		@Override
-		public void run() {
-			new java.io.BufferedReader(new java.io.InputStreamReader(inputStream)).lines()
-			.forEach(consumer);
-		}
 	}
 }
 

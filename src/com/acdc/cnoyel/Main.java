@@ -1,71 +1,73 @@
 package com.acdc.cnoyel;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
 
 public class Main {
 
 	public static void main(String[] args) {
-
-		// CONFIG REPERTOIRE LOCAL ET DISTANT
-		Git git = new Git();
-		git.setLocalRepo("C:\\Users\\cedri\\Desktop\\BLOGACDC_website\\");
-		git.setGithubRepo("https://github.com/CedricNoyel/BLOGACDC_website.git");
 		
-		// USER ACTIONS
+		Post newPost = askPostData();
+		Categories.addCategory(newPost.getCategory());
+
+		String githubDirectory = "https://github.com/CedricNoyel/BLOGACDC_website.git";
+		String gitDirectory = "C:\\Users\\cedri\\Desktop\\BLOGACDC_website";
+		String markdownFilePath = gitDirectory + File.separator + "_posts" + File.separator + newPost.getMarkdownFileName();
+
+        Tools.createMarkdownFile(newPost.toMarkdown(), markdownFilePath);
+		Tools.executeCmd("bundle exec jekyll serve -o", gitDirectory, true);
+		gitCommands(githubDirectory, gitDirectory);
+		
+		System.out.println("- Commandes git effectuées\r - End -");
+	}
+
+	/**
+	 * Method that runs git add, commit and push
+	 * @param githubDirectory - String of the distant git repository
+	 * @param gitDirectory- String of the local git repository
+	 */
+	private static void gitCommands(String githubDirectory, String gitDirectory) {
+		Tools.executeCmd("git add .", gitDirectory);
+		Tools.executeCmd("git commit -m \"Add markdown file\"", gitDirectory);
+		Tools.executeCmd("git push", gitDirectory);
+		
+		// [WORKAROUND] essayé de le faire avec la library git mais il faut qu'on ait un projet maven :/
+//		try {
+//			Repository localRepo = new FileRepository(gitDirectory);
+//	    	Git git = new Git(localRepo); 
+//			git.add().addFilepattern(".").call();
+//	        git.push().setRemote(githubDirectory).call();
+//		} catch (IOException e2) {
+//			e2.printStackTrace();
+//		} catch (NoFilepatternException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (GitAPIException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		Can also be done with given username and password
+//		PushCommand pushCommand = git.push();
+//	    pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider("username", "password"));
+//	    pushCommand.call();
+	}
+
+	private static Post askPostData() {
 		System.out.println("Titre de la publication");
 		String title = Tools.getStringUserInput();
-		
 		System.out.println("Catégorie de la publication");
 		String category = Tools.getStringUserInput();
-
 		System.out.println("Auteur de la publication");
 		String author = Tools.getStringUserInput();
-
 		System.out.println("Texte de la publication");
 		String bodyText = Tools.getStringUserInput();
-		
 		System.out.println("Liens de la publication (séparés par un espace si plusieurs ou laisser vide si aucun)");
 		List<String> linkList = Tools.stringToList(Tools.getStringUserInput(), " ");
-		
 		System.out.println("Liens des images (séparés par un espace si plusieurs images ou laisser vide si aucune)");
 		List<String> imgLinkList = Tools.stringToList(Tools.getStringUserInput(), " ");
 		
-		// CREATE THE POST
-		Post newPost = new Post(); // CREATE THE NEW POST
-		newPost.setTitle(title);
-		newPost.setCategory(category.trim().toLowerCase().replace(" ", "-"));
-		newPost.setAuthor(author);
-		newPost.setText(bodyText);
-		newPost.setLinkList(linkList);
-		newPost.setImgList(imgLinkList);
-
-		// CATEGORY
-		Categories.addCategory(category.trim().toLowerCase().replace(" ", "-")); // --> if not exist, add it into category/categories.txt file
-		String markdownString = newPost.toMarkdown();
-				
-		// CREATE MARKDOWN FILE
-		System.out.println(markdownString);
-		String markdownFileName = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()) + "-" + newPost.getTitle().replace(" ", "-") + ".markdown";
-		String markdownFilePath = git.getLocalRepo() + "_posts" + File.separator + markdownFileName;
-        Tools.createMarkdownFile(markdownString, markdownFilePath);
-
-		
-		// DISPLAY DEMO
-		Tools.executeCmd("bundle exec jekyll serve -o", git.getLocalRepo(), true);
-		System.out.println("Appuyez sur <entrer> pour valider et publier");
-		Tools.getStringUserInput();
-		
-		// GIT & GITHUB
-		Tools.executeCmd("git add .", git.getLocalRepo());
-		Tools.executeCmd("git commit -m \"add " + markdownFileName + "\" .", git.getLocalRepo());
-		Tools.executeCmd("git push", git.getLocalRepo());
-		
-		System.out.println("- End -");
+		return new Post(title, category, author, bodyText, linkList, imgLinkList);
 	}
 	
 }
