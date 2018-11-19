@@ -9,12 +9,15 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Post newPost = askPostData();
-		Categories.addCategory(newPost.getCategory());
 
 		String githubDirectory = "https://github.com/CedricNoyel/BLOGACDC_website.git";
-		String gitDirectory = "C:\\Users\\cedri\\Desktop\\BLOGACDC_website";
+		String gitDirectory = "C:/Users/cedri/Desktop/BLOGACDC_website";
 		String markdownFilePath = gitDirectory + File.separator + "_posts" + File.separator + newPost.getMarkdownFileName();
-
+		
+		Categories.categoriesFile = new File(gitDirectory + File.separator + "category" + File.separator + "category.txt");
+		
+		Categories.addCategory(newPost.getCategory());
+		
         Tools.createMarkdownFile(newPost.toMarkdown(), markdownFilePath);
 		Tools.executeCmd("bundle exec jekyll serve -o", gitDirectory, true);
 		gitCommands(githubDirectory, gitDirectory);

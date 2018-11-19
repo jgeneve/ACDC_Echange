@@ -1,10 +1,25 @@
 # ACDC - Static website generation
 
-## Build and execute project
-1. Gather sources
-2. Open the folder with Eclipse
-3. Export -> Java -> Java runnable file
-4. Open CMD and run the generated jar file with  ```java -jar <program.jar>```
+### Static Dynamic Website
+This project is done as part of my 1st year of study as a student at IMT Atlantique engineering school in Nantes(France). 
+The project is developed for the [STACK research group](http://stack.inria.fr/) in order to provide them a tool that allow them publish news on their static website easily. 
+
+### About project
+The project is adding news into the 'News' tab of the [website](http://stack.inria.fr/).
+An external tool named [Jekyll](https://jekyllrb.com/) is used to convert markdown into html pages and to build the html website.
+
+The architecture is described in the following class diagram:
+[class diagram](https://github.com/CedricNoyel/ACDC/blob/master/classDiagram.ucls)
+
+### Build and execute project
+1. Open the folder in Eclipse
+2. Export -> Java -> Java runnable file
+3. Open CMD and run the generated jar file with  ```java -jar <program.jar>```
+
+### Requirements
+- [Java](https://java.com/) (at least v8)
+- [Jekyll](https://jekyllrb.com/docs/) installed and up to date
+- Your computer must be pre-configured with a [git ssh key](https://help.github.com/articles/connecting-to-github-with-ssh/)
 
 ## TODO List
 - [x] User CMD Interface to gather information about the new post
@@ -13,12 +28,18 @@
 - [x] Create local server and open the HTML page
 - [x] Push generated post on GitHub
 
+### LOG 2018-11-21
+- Fix bugs
+- Refactor code
+- Add javadoc
+- Add test on Post class
+
 ### LOG 2018-11-14
-- Add a Git class used to create git object where we can use username, password, local and distant repositery path
 - Create executeCmd function that allow us to execute any cmd in a new thread
     |-> Add cmd to add, commit and push a git repositery
 - Clean code
 - Add javadoc
+- Generate class diagram
 
 ### LOG 2018-11-07
 No time this week
