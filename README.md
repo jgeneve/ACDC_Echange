@@ -9,7 +9,7 @@ The project is adding news into the 'News' tab of the [website](http://stack.inr
 An external tool named [Jekyll](https://jekyllrb.com/) is used to convert markdown into html pages and to build the html website.
 
 The architecture is described in the following class diagram:
-[class diagram](https://github.com/CedricNoyel/ACDC/blob/master/classDiagram.png)
+[class diagram](https://github.com/CedricNoyel/ACDC/blob/master/ClassDiagram.png)
 
 ### Build and execute project
 1. Open the folder in Eclipse
