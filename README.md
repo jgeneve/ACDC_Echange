@@ -1,15 +1,15 @@
 # ACDC - Static website generation
 
 ### Static Dynamic Website
-This project is done as part of my 1st year of study as a student at IMT Atlantique engineering school in Nantes(France). 
-The project is developed for the [STACK research group](http://stack.inria.fr/) in order to provide them a tool that allow them publish news on their static website easily. 
+This project is done as part of my first year of study as a student at IMT Atlantique engineering school. 
+The project is developed for the [STACK research group](http://stack.inria.fr/) in order to provide them a tool that allow them to publish news on their static website easily. 
 
 ### About project
 The project is adding news into the 'News' tab of the [website](http://stack.inria.fr/).
 An external tool named [Jekyll](https://jekyllrb.com/) is used to convert markdown into html pages and to build the html website.
 
 The architecture is described in the following class diagram:
-[class diagram](https://github.com/CedricNoyel/ACDC/blob/master/classDiagram.ucls)
+[class diagram](https://github.com/CedricNoyel/ACDC/blob/master/classDiagram.png)
 
 ### Build and execute project
 1. Open the folder in Eclipse
